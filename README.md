@@ -211,16 +211,16 @@ Single-asset BTC trend filter on the weekly timeframe. Long only when close > 5 
 ### `3_dead_strategies/`
 Eight rejected strategies, each documented with hypothesis, backtest result, and reason for kill. Examples:
 
-| Strategy | Reason for kill |
-|---|---|
-| Apex *with* pyramid | Curve-fit to 2023 bull regime; failed walk-forward |
-| Setup A "Spring" (BBWP compression breakout) | Too selective; ~2% APY barely beats fees |
-| Bear Edge (BTC shorts) | Negative expectancy after fees |
-| Counterpunch (1H mean reversion) | Did not beat USDT lending |
-| Bull Spring (long compression with BBWP exit) | Lost money in walk-forward |
-| Setup B (pullback to MA in uptrend) | -64% drawdown disqualified |
-| Funding Rate Carry on BTC | 3% APY, inferior to USDT lending |
-| Setup A on 1H | Fees destroyed the edge (-75% return) |
+| Strategy | Best-Variant APY | Max DD | Reason for kill |
+|---|---|---|---|
+| Apex *with* pyramid | P1 +121.6% → **P2 -0.2%** | -54% (P2) | Walk-forward collapse; classic curve-fit to 2023 bull regime |
+| Setup A "Spring" (BBWP compression breakout) | +6.0% | -38.5% | Best variant barely beats lending; refinements *degraded* OOS performance |
+| Bear Edge (BTC shorts) | +0.8% | -20.3% | 1/7th of USDT lending; weekend short edge too small vs fees |
+| Counterpunch (1H mean reversion) | +2.2% | -9.2% | Best variant still below lending; fees ate the edge |
+| Bull Spring (long compression with BBWP exit) | **-1.5%** | -17.7% | Premature exit cuts winners; structurally inverted risk:reward |
+| Setup B (pullback to MA in uptrend) | +2.8% (4H) | **-64.4%** | Unplayable drawdown despite positive return |
+| Funding Rate Carry on BTC | +3.13% | small | Half of USDT lending; fees consume funding at retail size |
+| Setup A on 1H | **-34.2%** | **-87.2%** | Fee drag annihilation: same signal that worked on 1D loses 75% on 1H |
 
 This kill list is intentionally featured because **rejecting strategies with rigor is the analytical skill that separates real research from cherry-picked storytelling**.
 

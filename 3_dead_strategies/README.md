@@ -12,16 +12,18 @@ In a job interview context: any data analyst can show you a working dashboard. S
 
 ## Summary Table
 
-| # | Strategy | Type | Verdict | Reason for Kill |
-|---|---|---|---|---|
-| 01 | Apex *with* Pyramid | Trend-following | 🚨 Curve-fit | +122% APY in training collapsed to -0.2% APY out-of-sample — classic 2023-bull-regime over-fit |
-| 02 | Setup A "Spring" | Volatility compression breakout | ⚠️ No edge | Score ≥ 8 filter too selective; ~2% APY barely beats fees |
-| 03 | Bear Edge | BTC shorts (counter-trend) | ⚠️ No edge | Negative expectancy after fees; structurally hard in crypto |
-| 04 | Counterpunch | 1H mean reversion | ⚠️ No edge | Didn't beat USDT lending; fees ate the small edge |
-| 05 | Bull Spring | Long compression w/ BBWP exit | 🚨 Negative | Lost money in walk-forward |
-| 06 | Setup B Pullback | Pullback to MA in uptrend | 🚨 Drawdown | -64% drawdown disqualified despite positive total return |
-| 07 | Funding Rate Carry | Perp funding arb on BTC | ⚠️ No edge | 3% APY, inferior to USDT lending after operational risk |
-| 08 | Setup A on 1H | Compression breakout on 1H | 🚨 Negative | Fees destroyed it (-75% total return) |
+| # | Strategy | Verdict | Trades | Best APY | Max DD | Reason for Kill |
+|---|---|---|---|---|---|---|
+| 01 | [Apex *with* Pyramid](apex_with_pyramid/) | 🚨 Curve-fit | 30 / 74 | +121.6% / **-0.2%** | -41% / -54% | Walk-forward collapsed: P1 +121.6% APY → P2 -0.2% APY (122-point swing) |
+| 02 | [Setup A "Spring"](setup_a_spring/) | ⚠️ No edge | 250 | +6.0% (best variant) | -38.5% | Best variant barely beats lending; -38.5% DD disqualifies; refinements *degraded* performance (curve-fit) |
+| 03 | [Bear Edge](bear_edge/) | ⚠️ No edge | 344 | +0.8% | -20.3% | Best variant returns +0.8% APY — 1/7th of lending benchmark |
+| 04 | [Counterpunch](counterpunch/) | ⚠️ No edge | 142-283 | +2.2% (best variant) | -9.2% | Best variant +2.2% APY — still less than USDT lending; fees ate the edge |
+| 05 | [Bull Spring](bull_spring/) | 🚨 Negative | 73 | **-1.5%** | -17.7% | Exit rule (BBWP > 80) cuts winners too early; structurally inverted risk:reward |
+| 06 | [Setup B Pullback](setup_b_pullback/) | 🚨 Drawdown | 339 | +2.8% | **-64.4%** | 4H variant: -64% drawdown disqualifies despite positive return; 1D variant only +2.9% APY |
+| 07 | [Funding Rate Carry](funding_rate_carry/) | ⚠️ No edge | continuous | +3.13% | small | Half of USDT lending; fees consume the funding income at retail size |
+| 08 | [Setup A on 1H](setup_a_1h_pyramid/) | 🚨 Catastrophic | 904 | **-34.2%** | **-87.2%** | Fee drag annihilation: -75% return on the same signal that worked on 1D |
+
+P1/P2 splits shown for Apex pyramid. Best-variant figures shown where multiple variants were tested.
 
 ## Status Legend
 
