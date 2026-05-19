@@ -196,7 +196,7 @@ Selected strategies (notably Apex) are tested across a 3-axis parameter grid (ty
 ### `2_strategies/01_quattro_donchian/`
 The live-deployed strategy. Donchian 20-bar breakout on BTC 4H with a daily 200 EMA rising filter and a 4-unit pyramid structure (+0.5N intervals). Risk-managed via 2x ATR trailing stop and 5% hard catastrophe stop.
 
-**Status:** live on BloFin since May 2026. Backtest +1107% over 4.5 years, max DD -37.5%.
+**Status:** live on BloFin since May 2026. Backtest Jan 2022 – May 2026: +1,107% return, +83% APY, -37.5% max DD, 94 trades, 26.6% win rate, 6.7x avg-win/avg-loss asymmetry.
 
 ### `2_strategies/02_apex_no_pyramid/`
 Multi-asset 6-month-high breakout on 4H. 8-asset universe with 50/200 SMA trend filter and 1.5x volume confirmation. 50% scale-out at 2R, then trail with 20-bar low.
@@ -329,7 +329,7 @@ crypto_systematic_research/
 ## 11. Current Outputs
 
 ### Backtest Results
-- Quattro: +1107% over 4.5 years, -37.5% max DD, walk-forward validated
+- Quattro: +1,107% return / +83% APY over Jan 2022 – May 2026 (4.1 years), -37.5% max DD, 94 trades, 26.6% win rate, walk-forward validated
 - Apex no-pyramid: +24% APY P1 → +6% APY P2, 27/27 sensitivity cells positive out-of-sample
 - 5 EMA + 200 EMA filter (1W BTC): +38.6% APY 2018-2026, max DD -40%
 - 8 rejected strategies with documented kill reasons

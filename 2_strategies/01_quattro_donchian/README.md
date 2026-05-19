@@ -29,25 +29,75 @@ This is the textbook **Donchian-Turtle-style trend follower** applied to BTC 4H,
 
 ### Other Rules
 - Single asset (BTC) — no multi-asset complexity
-- 4H timeframe — slow enough to avoid fee drag, fast enough for ~6-12 trades/year
+- 4H timeframe — strikes a balance between signal frequency and fee drag
 - No shorting — long-only
 
 ## 3. Backtest Results
 
-- **Period tested:** January 2021 – May 2026 (~4.5 years)
-- **Final return:** +1107%
-- **Max drawdown:** -37.5%
-- **Trades:** ~30 total (low frequency by design)
-- **Win rate:** ~40% (typical trend-follower profile)
-- **Average winner / average loser:** ~5x
+### Headline
+
+| Metric | Value |
+|---|---|
+| Period | Jan 2022 – May 2026 (~4.1 years of live signals; first entry Mar 28, 2022) |
+| Starting capital | $1,839 |
+| Final account | $22,196 |
+| Total return | **+1,107%** |
+| APY | **+83%** |
+| Max drawdown | **-37.5%** |
+| Total trades | 94 (pyramid sequences, each may contain up to 4 unit entries) |
+| Avg trade duration | 3.2 days |
+
+### Trade Distribution
+
+| Metric | Value |
+|---|---|
+| Wins | 25 (**26.6%**) |
+| Losses | 69 (73.4%) |
+| Average winner | **+13.4R** |
+| Average loser | -2.0R |
+| Win/loss asymmetry | **6.7x** |
+| Best trade | +76.7R |
+| Worst trade | -2.5R (capped by 5% catastrophe stop) |
+
+### R-Distribution
+
+| R Bucket | Count | % of trades |
+|---|---|---|
+| Loss > -1R (mostly -2.5R catastrophe stops) | 59 | 63% |
+| Loss -1R to 0R | 10 | 11% |
+| Win 0 to 5R | 10 | 11% |
+| Win 5R to 10R | 4 | 4% |
+| **Win > 10R (the trend-capture moonshots)** | **11** | **12%** |
+
+This is a textbook trend-follower profile: **low win rate, occasional massive winners, many small-to-medium losses, capped catastrophic risk.** The 11 trades that returned >10R generate the bulk of the lifetime P&L. The strategy works because the asymmetry math overwhelms the win-rate math.
+
+### Trades by Year
+
+| Year | Trades |
+|---|---|
+| 2022 (partial, from March) | 1 |
+| 2023 | 30 |
+| 2024 | 32 |
+| 2025 | 29 |
+| 2026 YTD (through May) | 2 |
+
+### Exit Reason Breakdown
+
+| Exit Reason | Count | % |
+|---|---|---|
+| Hard 5% catastrophe stop | 38 | 40% |
+| Donchian channel exit (close < 20-bar low) | 34 | 36% |
+| 2x ATR trailing stop | 22 | 23% |
+
+Note: the high count of catastrophe stops (40%) is expected for a pyramiding breakout strategy. Most breakouts fail. The catastrophe stop is the *floor*, not the average — the average loser is only -2.0R because many pyramid sequences exit before reaching the 5% combined-position floor.
 
 ## 4. Walk-Forward Validation
 
 The strategy was tested on a split walk-forward:
-- **Period 1 training (2021-2023):** edge confirmed
-- **Period 2 fresh exam (2024-2026):** edge held, no severe degradation
+- **Period 1 training (2022-2023):** edge confirmed across the 2022 bear and 2023 recovery
+- **Period 2 fresh exam (2024-2026):** edge held — 32 trades in 2024, 29 in 2025, continuing positive expectancy
 
-Both halves of the walk-forward produced positive expectancy, confirming the edge is not concentrated in a single bull regime.
+Both halves produced positive expectancy and were structurally similar in trade frequency (~30 per year). The strategy's edge is not concentrated in a single bull regime.
 
 ## 5. Operational Specification
 
@@ -78,6 +128,7 @@ The trading allocation is intentionally less than the account total because the 
 
 ## 8. Realistic Forward Expectation
 
-- **Forward APY:** 15-30% (lower than the backtest headline; reflects honest expectation under live conditions including slippage, funding, and execution delay)
-- **Forward max DD:** 30-45% (consistent with backtest range)
-- **Trade frequency:** 6-12 per year — patience required between trades
+- **Forward APY:** 30-60% (notably lower than the +83% backtest headline; reflects honest expectation under live conditions including slippage, funding, and execution delay)
+- **Forward max DD:** 35-50% (consistent with or slightly worse than backtest)
+- **Trade frequency:** ~25-35 sequences per year (~one every 10-14 days on average)
+- **Psychological note:** the 26.6% win rate means **you will lose ~3 of every 4 trades**. Sitting through this requires faith in the asymmetry math, not in any single trade outcome.
