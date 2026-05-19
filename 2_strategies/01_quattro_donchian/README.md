@@ -19,13 +19,16 @@ This is the textbook **Donchian-Turtle-style trend follower** applied to BTC 4H,
 
 ### Pyramid Structure
 - **Maximum units:** 4
-- **Add trigger:** every +0.5 N (where N = ATR at original entry) above the original entry price
-- **Each unit risks:** 2% of equity at original entry
+- **Add levels:** Unit 2 at +0.5N, Unit 3 at +1.0N, Unit 4 at +1.5N (where N = ATR(14) at original entry, fixed for the entire sequence)
+- **Each unit risks:** 2% of account at original entry, sized off 2N stop distance
 
-### Exit Logic
-- **Hard catastrophe stop:** 5% of equity loss across the combined position
-- **Trailing stop:** 2x ATR below the highest reached price (wick-based on the high, not just close)
-- **No fixed profit target** — the trail does the work
+### Exit Logic (three independent mechanisms)
+- **Donchian channel exit:** close < previous 10-bar low → close ALL units at next bar's open
+- **Per-unit trailing stop:** stop = newest unit's entry − 2N (wick-based). Tightens only when a new unit is added, not continuously as price moves.
+- **Hard catastrophe stop:** combined unrealized loss reaches 5% of account (wick-based)
+- **No fixed profit target** — the Donchian channel and the unit-based trail do the work
+
+In live results, the three exit reasons split roughly: 40% hard stops, 36% Donchian exits, 23% trailing stops.
 
 ### Other Rules
 - Single asset (BTC) — no multi-asset complexity
@@ -121,8 +124,8 @@ The trading allocation is intentionally less than the account total because the 
 
 ## 7. Files
 
-- `backtest.py` — research backtest (to be added)
-- `results/` — equity curves, walk-forward charts (to be added)
+- [`backtest.py`](backtest.py) — full research backtest script (CCXT-based, no API keys; reproducible from Binance public OHLCV)
+- [`results/quattro_equity_curve.png`](results/quattro_equity_curve.png) — equity curve over the 4.1-year backtest
 
 > **Note:** The live production code (with API keys, exchange credentials, and systemd service files) is intentionally **not** included in this public repository. Only research code is published.
 

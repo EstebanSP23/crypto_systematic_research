@@ -71,8 +71,8 @@ The 2025 underperformance is the watch-item — the strategy does not protect ag
 
 ## 7. Files
 
-- `backtest.py` — full multi-timeframe backtest with filter variants (to be added)
-- `results/` — equity curves vs B&H, drawdown panels (to be added)
+- [`backtest.py`](backtest.py) — full multi-timeframe (1D, 5D, 1W) backtest with V0 (no filter), V1 (filter-gated), V2 (long/short) variants
+- [`results/equity_vs_buy_and_hold.png`](results/equity_vs_buy_and_hold.png) — 3-panel comparison of all variants vs BTC buy-and-hold across timeframes
 
 ## 8. Realistic Forward Expectation
 

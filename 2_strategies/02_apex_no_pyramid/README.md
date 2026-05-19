@@ -76,9 +76,10 @@ A 3-axis grid (lookback x ATR multiplier x volume multiplier) was tested across 
 
 ## 6. Files
 
-- `backtest.py` — research backtest (to be added)
-- `sensitivity_grid.py` — 27-cell parameter grid (to be added)
-- `results/` — equity curves, heatmaps, per-asset diagnostics (to be added)
+- [`walkforward.py`](walkforward.py) — walk-forward backtest with P1 training / P2 fresh exam split (this file also runs the rejected "Spring" strategy for comparison)
+- [`sensitivity_grid.py`](sensitivity_grid.py) — 27-cell parameter grid (lookback × ATR multiplier × volume multiplier) testing robustness across reasonable parameter variations
+- [`results/walkforward_p1_p2.png`](results/walkforward_p1_p2.png) — P1 vs P2 equity curves
+- [`results/per_asset_dissection.png`](results/per_asset_dissection.png) — per-asset × year P&L heatmap, cumulative R curves, trade-by-trade R distribution
 
 ## 7. Honest Caveats
 
