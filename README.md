@@ -4,6 +4,12 @@
 
 ---
 
+![Quattro live-deployed strategy backtest](2_strategies/01_quattro_donchian/results/quattro_equity_curve.png)
+
+*Quattro Donchian breakout strategy — BTC 4H backtest, January 2022 to May 2026. +1,107% total return, +83% APY, -37.5% max drawdown across 94 trades (26.6% win rate, 6.7× win/loss R asymmetry). Walk-forward validated; live-deployed on BloFin perpetual futures via CCXT.*
+
+---
+
 ## 1. Executive Summary
 
 **Crypto Systematic Trading Research** is a portfolio project documenting the design, backtesting, walk-forward validation, and live deployment of systematic trading strategies on crypto perpetual futures markets.
