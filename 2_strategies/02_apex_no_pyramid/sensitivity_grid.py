@@ -33,7 +33,7 @@ P1_end   = pd.Timestamp('2023-12-31', tz='UTC')
 P2_start = pd.Timestamp('2024-01-01', tz='UTC')
 P2_end   = pd.Timestamp('2026-05-31', tz='UTC')
 
-CACHE = 'ohlcv_4h_cache.pkl'
+CACHE = '../../1_data/ohlcv_4h_cache.pkl'
 
 def fetch_full(symbol, timeframe, since_ms, exchange):
     all_candles = []

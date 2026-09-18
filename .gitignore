@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Cached OHLCV pickles (ver 1_data/README.md)
+*.pkl

@@ -24,7 +24,7 @@ import matplotlib.dates as mdates
 INITIAL_CAPITAL = 1839.17
 FEE_PER_LEG     = 0.0010
 HINDSIGHT_BEAR_YEARS = {2018, 2022, 2026}
-CACHE = 'btc_1d_2017_cache.pkl'
+CACHE = '../../1_data/btc_1d_2017_cache.pkl'
 
 # ── DATA (fetch from 2017 for EMA200 warmup) ─────────────────────────────────
 if os.path.exists(CACHE):
