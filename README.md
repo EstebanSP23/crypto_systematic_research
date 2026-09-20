@@ -292,26 +292,37 @@ crypto_systematic_research/
 ├── 0_project_admin/           ← project planning, decision log
 │
 ├── 1_data/                    ← OHLCV caching and access layer
-│   └── README.md
+│   └── README.md              ← *.pkl caches are gitignored
 │
 ├── 2_strategies/              ← validated and live strategies
-│   ├── README.md
+│   ├── README.md              ← backtest scripts and their trade-log CSVs sit
+│   │                             at each strategy root; results/ holds charts
 │   ├── 01_quattro_donchian/
 │   │   ├── README.md
-│   │   ├── backtest.py
+│   │   ├── backtest.py        ← published research backtest
+│   │   ├── backtest_*.py      ← workshop variants: trend, 2-unit, filters,
+│   │   │                         multi-asset, withdrawals
+│   │   ├── compare_pyramids.py
+│   │   ├── equity_chart.py
 │   │   └── results/
 │   ├── 02_apex_no_pyramid/
 │   │   ├── README.md
-│   │   ├── backtest.py
+│   │   ├── walkforward.py
 │   │   ├── sensitivity_grid.py
+│   │   ├── apex_viz.py        ← baseline visualisation and trade export
+│   │   ├── apex_dissect.py    ← per-asset × year dissection
+│   │   ├── apex_filter_test.py
+│   │   ├── apex_filtered.py   ← universe pruning and seasonal test
 │   │   └── results/
 │   └── 03_five_ema_filter/
 │       ├── README.md
 │       ├── backtest.py
+│       ├── backtest_5ema.py       ← unfiltered baseline
+│       ├── backtest_5ema_cycle.py ← halving-cycle overlay variant
 │       └── results/
 │
 ├── 3_dead_strategies/         ← the kill list — one folder per rejected strategy
-│   ├── README.md
+│   ├── README.md              ← each folder: README + source script + trade CSVs
 │   ├── apex_with_pyramid/
 │   ├── setup_a_spring/
 │   ├── bear_edge/
@@ -322,13 +333,27 @@ crypto_systematic_research/
 │   └── setup_a_1h_pyramid/
 │
 ├── 4_methodology/             ← validation framework documentation
-│   ├── README.md
-│   ├── walkforward_validation.md
-│   ├── curvefit_detection.md
-│   └── sensitivity_analysis.md
+│   └── README.md
 │
-└── 5_outputs/                 ← consolidated charts and CSV exports
+├── 5_outputs/                 ← presentation layer: PDF reports and charts
+│   ├── generar_pdf_es.py          ← executive summary (ES)
+│   ├── generar_pdf_tecnico_es.py  ← technical specification (ES)
+│   ├── generar_comparacion_es.py  ← 3-mode comparison chart
+│   ├── _quattro_chart_en.py       ← featured equity curve (EN)
+│   ├── _quattro_stats.py          ← Quattro stats from source CSV
+│   └── _dead_stats.py             ← kill-list stats from source CSVs
+│
+└── 6_archive/                 ← pre-methodology research, kept for provenance
+    ├── README.md              ← PMARP/BBWP 1H strategy and why it is archived
+    ├── backtest.py            ← V1 and V2 plus their trade logs
+    ├── validate_pmarp.py      ← TradingView indicator reimplementations,
+    └── validate_bbwp.py          verified against the platform
 ```
+
+> **Why `6_archive/` is not part of the kill list:** `3_dead_strategies/` holds
+> strategies killed *by* the validation methodology. `6_archive/` holds work that
+> predates it — backtests run without fee modelling or walk-forward splits. See
+> [`6_archive/README.md`](6_archive/README.md).
 
 ---
 
