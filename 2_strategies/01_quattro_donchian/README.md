@@ -135,3 +135,44 @@ The trading allocation is intentionally less than the account total because the 
 - **Forward max DD:** 35-50% (consistent with or slightly worse than backtest)
 - **Trade frequency:** ~25-35 sequences per year (~one every 10-14 days on average)
 - **Psychological note:** the 26.6% win rate means **you will lose ~3 of every 4 trades**. Sitting through this requires faith in the asymmetry math, not in any single trade outcome.
+
+## 9. Break-even variants (tested, rejected)
+
+Script: [`backtest_breakeven_variants.py`](backtest_breakeven_variants.py) → [`results/breakeven_variants.csv`](results/breakeven_variants.csv). Same data and period (Jan 2022 – May 2026), same rules; only the stop changes:
+
+- **A** Baseline — current system
+- **B** Break-even when Unit 4 fills: `common_stop = max(common_stop, weighted avg entry)`
+- **C** Break-even once close > weighted avg entry + 1N (N = ATR at original entry)
+- **D** Same as C, plus the Donchian exit uses the 5-bar low (instead of 10) once Unit 4 is in
+
+"Given back" = trades whose bar high exceeded weighted avg entry + 1N and still closed negative. 0R exits are counted separately (not wins, not in avg loss). Max DD on closed-trade equity; no fees.
+
+**Full period (Jan 2022 – May 2026)**
+
+| Variant | Return | APY | Max DD | Trades | Win rate | Avg win R | Avg loss R | 0R exits | Given back |
+|---|---|---|---|---|---|---|---|---|---|
+| A Baseline | **+1,107%** | **78.5%** | −37.5% | 94 | 26.6% | +13.42 | −2.01 | 0 | 25 |
+| B BE @ Unit 4 | +875% | 69.9% | −37.7% | 112 | 14.3% | +17.22 | −1.78 | 41 | 5 |
+| C BE @ +1N | +564% | 55.3% | −47.7% | 104 | 16.3% | +17.17 | −1.94 | 20 | 16 |
+| D BE @ +1N + Donchian 5 | +476% | 50.3% | −44.7% | 107 | 18.7% | +14.13 | −1.90 | 18 | 16 |
+
+**Walk-forward** (single run split by entry date; P2 measured from the equity P1 ended with)
+
+| Period · Variant | Return | APY | Max DD | Trades | Win rate | Avg win R | Avg loss R | 0R exits | Given back |
+|---|---|---|---|---|---|---|---|---|---|
+| P1 2022-23 · A | +288% | 105.3% | −30.8% | 31 | 22.6% | +22.99 | −2.11 | 0 | 8 |
+| P1 2022-23 · B | **+352%** | **122.6%** | **−22.2%** | 33 | 18.2% | +24.93 | −1.89 | 9 | 2 |
+| P1 2022-23 · C | +302% | 109.3% | −27.2% | 31 | 19.4% | +26.25 | −2.07 | 3 | 6 |
+| P1 2022-23 · D | +295% | 107.2% | −28.6% | 32 | 18.8% | +26.78 | −2.02 | 3 | 6 |
+| P2 2024-26 · A | **+211%** | **60.0%** | −37.5% | 63 | 28.6% | +9.70 | −1.95 | 0 | 17 |
+| P2 2024-26 · B | +116% | 37.5% | −37.7% | 79 | 12.7% | +12.60 | −1.73 | 32 | 3 |
+| P2 2024-26 · C | +65% | 23.1% | −47.7% | 73 | 15.1% | +12.21 | −1.87 | 17 | 10 |
+| P2 2024-26 · D | +46% | 17.0% | −44.7% | 75 | 18.7% | +8.70 | −1.84 | 15 | 10 |
+
+**Why rejected**
+
+- Break-even does cut given-back trades (25 → 5 in B, 16 in C/D), but win rate drops from 26.6% to 14–19%: many trends revisit the average entry before continuing, get stopped at 0R and are re-entered at a worse price.
+- Every variant beats the baseline in P1 but loses in P2 (B +116%, C +65%, D +46% vs +211%): the improvement does not hold out of sample.
+- C and D also deepen max drawdown to −45%/−48%, and B trades 19% more often, which fees would punish further.
+
+> Sensitivity: `--realistic-fills` (the higher stop is hit first; fill at min(open, stop)) → [`results/breakeven_variants_realistic_fills.csv`](results/breakeven_variants_realistic_fills.csv). The baseline improves too (+1,274%); B edges it on the full period (+1,403%) but still loses in P2 (+188% vs +228%), so the verdict stands.
