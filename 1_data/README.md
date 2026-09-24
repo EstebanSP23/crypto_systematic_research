@@ -21,8 +21,9 @@ The data layer provides raw OHLCV (Open-High-Low-Close-Volume) market data to al
 | ARB | 4H | 2023-03 to 2026-05 | ~6,900 |
 | SUI | 4H | 2023-05 to 2026-05 | ~6,700 |
 | SEI | 4H | 2023-08 to 2026-05 | ~6,000 |
-| BTC (`btc_4h_2019_cache.pkl`) | 4H | 2019-01 to 2026-09 | 16,922 (5 bars missing in 2019-20, Binance outages) |
-| BTC perp funding (`btc_funding_binance.csv`) | 8H | 2019-09 to 2026-09 | 7,707 |
+| BTC (`btc_4h_2019_cache.pkl`) | 4H | 2019-01 to 2026-09 | 16,933 (5 bars missing in 2019-20, Binance outages) |
+| BTC (`btc_4h_2017_cache.pkl`, `fetch_btc_4h_2017.py`) | 4H | 2017-08-17 to 2026-09 | 19,933 (16 bars missing in 2018-20, Binance outages) |
+| BTC perp funding (`btc_funding_binance.csv`) | 8H | 2019-09 to 2026-09 | 7,713 |
 
 The variation in altcoin bar counts reflects actual exchange listing dates — a real-world constraint that affects multi-asset strategy design.
 

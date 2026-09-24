@@ -246,3 +246,54 @@ Notes for reading the result (information, not part of the criteria):
 - In P0 and P2, every slower leg also beats v2 on its own, so part of the gain is a general "add a slower channel" effect rather than something specific to 55/20.
 - 20/10 + 40/15 scored higher than 55/20 in P1, P2 and 2022-26 return, but it was not the tested hypothesis.
 - Max DD is on closed-trade equity. There is no slippage; fees and funding are modeled.
+
+## 13. Backtest continuo 2018-2026 ($1,000)
+
+One continuous run from **2018-01-01 to 2026-09-23**, starting with $1,000 and compounding, with real costs: taker 0.06% per side and Binance funding debited from the balance. It uses [`quattro_v2_engine.py`](quattro_v2_engine.py), which first re-verifies v2. Script: [`backtest_2018_2026.py`](backtest_2018_2026.py).
+
+- **A** Quattro = 20/10 alone, full risk (2% per unit)
+- **B** 55/20 alone, full risk
+- **C** 20/10 + 55/20 at 1/2 risk per leg on a shared balance, as in Round 3
+
+Max drawdown here is on **mark-to-market equity**: balance plus unrealized P&L of open units at every 4H close. This is stricter than the closed-trade DD used in earlier sections.
+
+> **Funding before 2019-09-10 is assumed**, not real. The Binance BTC/USDT perpetual did not exist before 2019-09-10, so a flat 0.01% per 8h settlement is charged until then (dashed vertical line in the charts). Real Binance funding is used from 2019-09-10 on. With zero funding before that date instead, final balances would be about 5% higher (A $241,079, B $97,448, C $177,848).
+
+**Summary 2018-01-01 → 2026-09-23**
+
+| Config | Total return | Final balance | APY | Max DD (MTM) | Calmar | Trades | Win rate | Avg win / loss R | Total costs (fees + funding) |
+|---|---|---|---|---|---|---|---|---|---|
+| A Quattro 20/10 | +22,862% | $229,619 | 86.4% | −56.3% | 1.54 | 180 | 28.3% | +13.62 / −2.09 | $83,799 ($41,077 + $42,721) |
+| B 55/20 alone | +9,197% | $92,969 | 68.1% | −64.1% | 1.06 | 107 | 27.1% | +19.78 / −2.17 | $32,542 ($11,477 + $21,065) |
+| C 20/10 + 55/20 | +16,852% | $169,518 | 80.1% | **−50.0%** | **1.60** | 287 | 27.9% | +15.86 / −2.12 | $57,150 ($24,789 + $32,361) |
+| BTC buy & hold | +515% | $6,153 | 23.1% | −81.4% | 0.28 | — | — | — | — (no fees) |
+
+On closed trades only, the max DDs would be −41.7% (A), −43.1% (B) and −37.2% (C). Marking open positions to market adds 13–21 points.
+
+**Calendar years — return % / max DD % (mark-to-market)**
+
+| Year | A Quattro 20/10 | B 55/20 alone | C 20/10 + 55/20 | BTC buy & hold |
+|---|---|---|---|---|
+| 2018 | −8.4% / −24.3% | −18.7% / −32.4% | −13.6% / −28.4% | −73.0% / −81.4% |
+| 2019 | +424.1% / −36.4% | +185.8% / −42.5% | +298.6% / −39.3% | +94.3% / −52.6% |
+| 2020 | +267.6% / −55.4% | +865.5% / −44.0% | +515.4% / −50.0% | +302.0% / −56.0% |
+| 2021 | +59.4% / −45.7% | −23.3% / −64.1% | +12.1% / −46.2% | +59.8% / −54.1% |
+| 2022 | −5.5% / −9.2% | −5.5% / −9.2% | −5.5% / −9.2% | −64.2% / −67.2% |
+| 2023 | +244.4% / −38.4% | +79.9% / −27.4% | +163.5% / −31.6% | +155.6% / −21.2% |
+| 2024 | +104.1% / −56.3% | +246.2% / −22.8% | +163.2% / −34.0% | +121.3% / −30.0% |
+| 2025 | +11.6% / −34.8% | −25.3% / −38.1% | −6.6% / −33.5% | −6.3% / −34.4% |
+| 2026 YTD | +10.2% / −17.4% | +22.9% / −16.8% | +16.5% / −14.2% | −3.7% / −40.0% |
+
+In 2022 the only trade was the 28 Mar breakout, which was both a 20-bar and a 55-bar breakout with the same ATR, so all three configurations took the same trade in R terms and show identical numbers.
+
+![Equity 2018-2026](results/equity_2018_2026.png)
+
+![Drawdown 2018-2026](results/drawdown_2018_2026.png)
+
+Data and caveats:
+
+- **Data sources.** 4H candles come from [`1_data/btc_4h_2017_cache.pkl`](../../1_data/fetch_btc_4h_2017.py) (Binance from 2017-08-17; 16 bars missing, all in 2018–2020). Daily candles for the EMA-200 are fetched live.
+- **EMA-200 warm-up.** Binance has no earlier history, so on 2018-01-01 the daily EMA-200 rests on only 137 daily closes (about 25% seed weight, under 5% by July 2018). The 2018 regime filter is therefore approximate.
+- **Buy & hold** buys at the 2018-01-01 open with no fees.
+- **Not modeled:** slippage and minimum order sizes.
+- **Files.** [`results/backtest_2018_2026.csv`](results/backtest_2018_2026.csv) holds the summary and calendar years; [`results/equity_2018_2026.csv`](results/equity_2018_2026.csv) holds the daily equity of the three configurations plus buy & hold.
