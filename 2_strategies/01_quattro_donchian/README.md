@@ -197,3 +197,52 @@ All Round 2 experiments run on [`quattro_v2_engine.py`](quattro_v2_engine.py), a
 - **Does the ensemble depend on one speed?** Not for P&L: net profit splits 34% / 34% / 32% across 10/5, 20/10 and 55/20. But the P2 edge over v2 does depend on the **55/20** speed: without it, P2 Calmar is 0.91 (below v2), and the 10/5 speed dilutes the result (removing it improves Calmar in both halves).
 
 Caveats: the accepted configuration came out of a post-hoc leave-one-out, not a pre-registered hypothesis, and was the only acceptance among 12 Round 2 variants. Its P1 margin is thin (+0.07 to +0.13 Calmar), and max DD is measured on closed-trade equity.
+
+## 12. Round 3 (validación fuera de muestra)
+
+Validation of **20/10 + 55/20** (each leg at 1/2 risk, so total risk equals v2's; hard stop scaled to keep 2.5R) against v2 (20/10 alone, full risk), both with taker fees and Binance funding. Script: [`backtest_round3_validation.py`](backtest_round3_validation.py) → [`results/round3_validation.csv`](results/round3_validation.csv). Criteria were fixed before running:
+
+- **A:** beat v2 on Calmar in an unseen P0.
+- **B:** at least 3 of 4 slow-leg neighbours beat v2 on P2 Calmar, and none falls below 0.5.
+- **Verdict:** accepted only if both pass.
+
+**P0 setup.** P0 = 2019-10-01 to 2021-12-31, an independent run from $1,839. Data comes from the 2019 4H cache (ATR warmed from 2019-01), the daily cache (EMA-200 warmed from 2017-08) and Binance funding from 2019-09-10. The 4H cache matches the live data bar for bar on 2022-01 to 2026-05. One 4H bar is missing in P0, and no funding settlement is.
+
+**P1/P2 setup.** Same 2022-01 to 2026-05 run as Round 2, split by exit date.
+
+**Test A — out of sample P0 (with costs)**
+
+| Config | Period | Return | APY | Max DD | Calmar | Trades | Win rate | Avg win / loss R | Costs |
+|---|---|---|---|---|---|---|---|---|---|
+| v2 | **P0 2019-10 – 2021-12** | +525% | 125.6% | −40.0% | **3.14** | 58 | 25.9% | +15.62 / −2.13 | $4,213 |
+| 20/10 + 55/20 | **P0 2019-10 – 2021-12** | +624% | 140.7% | −37.2% | **3.79** | 93 | 23.7% | +22.44 / −2.10 | $5,180 |
+| v2 | 2020 (info) | +194% | 193.1% | −35.8% | 5.40 | 30 | 30.0% | +14.14 / −2.15 | $982 |
+| 20/10 + 55/20 | 2020 (info) | +272% | 271.4% | −27.9% | 9.73 | 44 | 27.3% | +24.30 / −2.12 | $954 |
+| v2 | 2021 (info) | +100% | 99.6% | −40.0% | 2.49 | 27 | 18.5% | +20.75 / −2.10 | $3,198 |
+| 20/10 + 55/20 | 2021 (info) | +85% | 85.2% | −37.2% | 2.29 | 47 | 17.0% | +24.65 / −2.08 | $4,191 |
+
+**Test B — parameter neighbourhood** (combos at 1/2 risk per leg; slow legs alone at full risk)
+
+| Config | Calmar P0 | Calmar P1 | Calmar P2 | P0 return / DD / trades / costs | 2022-26 return / DD / trades / costs |
+|---|---|---|---|---|---|
+| v2 (20/10) | 3.14 | 2.60 | 0.92 | +525% / −40.0% / 58 / $4,213 | +610% / −41.7% / 94 / $4,583 |
+| 20/10 + 40/15 | 3.50 | 2.68 | **1.48** | +558% / −37.3% / 100 / $4,195 | +761% / −34.6% / 156 / $4,874 |
+| **20/10 + 55/20** | 3.79 | 2.67 | **1.30** | +624% / −37.2% / 93 / $5,180 | +493% / −33.2% / 148 / $3,498 |
+| 20/10 + 70/25 | 3.98 | 2.88 | **1.41** | +584% / −33.9% / 88 / $4,886 | +532% / −32.9% / 143 / $3,494 |
+| 20/10 + 100/30 | 4.13 | 2.56 | **1.49** | +594% / −33.0% / 80 / $4,582 | +453% / −30.3% / 138 / $2,909 |
+| 40/15 alone | 3.26 | 3.02 | 1.76 | +535% / −39.0% / 42 / $3,927 | +838% / −34.7% / 62 / $4,904 |
+| 55/20 alone | 3.40 | 1.88 | 1.31 | +664% / −43.1% / 35 / $6,355 | +330% / −35.9% / 54 / $2,473 |
+| 70/25 alone | 3.94 | 1.91 | 1.73 | +602% / −34.9% / 30 / $5,753 | +382% / −31.0% / 49 / $2,469 |
+| 100/30 alone | 4.28 | 0.48 | 1.81 | +615% / −32.6% / 22 / $5,087 | +244% / −31.4% / 44 / $1,601 |
+
+**Verdict: 20/10 + 55/20 ACCEPTED.**
+
+- **A passes:** P0 Calmar 3.79 vs 3.14.
+- **B passes:** 4 of 4 combos beat v2's P2 Calmar of 0.92 (1.30–1.49), and none is below 0.5. 55/20 is not a lucky peak; it sits mid-pack among its neighbours.
+
+Notes for reading the result (information, not part of the criteria):
+
+- The P0 edge comes from 2020 (Calmar 9.73 vs 5.40). In 2021 alone the combination trailed v2 (2.29 vs 2.49).
+- In P0 and P2, every slower leg also beats v2 on its own, so part of the gain is a general "add a slower channel" effect rather than something specific to 55/20.
+- 20/10 + 40/15 scored higher than 55/20 in P1, P2 and 2022-26 return, but it was not the tested hypothesis.
+- Max DD is on closed-trade equity. There is no slippage; fees and funding are modeled.
