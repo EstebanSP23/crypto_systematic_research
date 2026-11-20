@@ -297,3 +297,37 @@ Data and caveats:
 - **Buy & hold** buys at the 2018-01-01 open with no fees.
 - **Not modeled:** slippage and minimum order sizes.
 - **Files.** [`results/backtest_2018_2026.csv`](results/backtest_2018_2026.csv) holds the summary and calendar years; [`results/equity_2018_2026.csv`](results/equity_2018_2026.csv) holds the daily equity of the three configurations plus buy & hold.
+
+## 14. Escalera spot en mercado bajista (probada, rechazada)
+
+Idea tested: buy spot BTC with equal-dollar limit orders at fixed % below the cycle peak, then sell everything at the open after the first Quattro entry signal following the floor. The signal uses the same rules as the engine: close above the 20-bar high and above the daily EMA-200. Fills happen when a 4H low touches the limit; the fee is 0.1% per side. Script: [`analysis_bear_ladder.py`](analysis_bear_ladder.py), using `btc_4h_2017_cache.pkl` and `btc_1d_2017_cache.pkl`. The first signal was checked against the engine's own first entry after each floor.
+
+The three ladders:
+
+- **A** −52.5% to −60.4%: 5 rungs, equivalent to 60k / 57.5k / 55k / 52.5k / 50k measured from 126,198
+- **B** −50% to −70%: rungs at −50, −55, −60, −65 and −70%
+- **C** −60% to −75%: rungs at −60, −65, −70 and −75%
+
+**Cycles**
+
+| Cycle | Peak | Peak date | Floor | Floor date | Floor vs peak | First signal (bar) | Signal close | Sale (next open) | Sale price |
+|---|---|---|---|---|---|---|---|---|---|
+| Dec-2017 | 19,798.68 | 2017-12-17 | 3,156.26 | 2018-12-15 | −84.1% | 2019-04-02 04:00 | 4,646.03 | 2019-04-02 08:00 | 4,647.01 |
+| Nov-2021 | 69,000.00 | 2021-11-10 | 15,476.00 | 2022-11-21 | −77.6% | 2023-01-20 20:00 | 22,667.21 | 2023-01-21 00:00 | 22,666.00 |
+
+**Ladders** ($1,000 per rung; every rung filled in both cycles)
+
+| Cycle | Ladder | Filled | Avg buy | Sale | Return | Worst floating DD | Months (from 1st fill) | Months (avg per $) | USDT 4% | Diff (pp) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Dec-2017 | A −52.5..−60.4% | 5/5 | 8,593 | 4,647 | −46.0% | −63.3% | 14.5 | 14.0 | +4.7% | −50.7 |
+| Dec-2017 | B −50..−70% | 5/5 | 7,666 | 4,647 | −39.5% | −58.9% | 14.5 | 13.1 | +4.4% | −43.9 |
+| Dec-2017 | C −60..−75% | 4/4 | 6,240 | 4,647 | −25.7% | −49.5% | 13.8 | 10.3 | +3.4% | −29.1 |
+| Nov-2021 | A −52.5..−60.4% | 5/5 | 29,947 | 22,666 | −24.5% | −48.4% | 8.4 | 8.4 | +2.8% | −27.2 |
+| Nov-2021 | B −50..−70% | 5/5 | 26,718 | 22,666 | −15.3% | −42.1% | 11.9 | 8.6 | +2.9% | −18.2 |
+| Nov-2021 | C −60..−75% | 4/4 | 21,749 | 22,666 | +4.0% | −28.9% | 8.3 | 6.3 | +2.1% | +1.9 |
+
+**Why rejected**
+
+- The first Quattro signal comes about **1.5× above the floor** (1.47× in 2019, 1.46× in 2023), well below the average price of a ladder that started buying at −50% to −60%.
+- Selling at that signal closes **5 of 6 ladders at a loss** (−15% to −46%). The only exception is ladder C in the 2021 cycle, at +4.0%, just +1.9 pp over USDT.
+- The capital sits idle for 6 to 14 months with floating drawdowns of −29% to −63%, while USDT at 4% would have earned +2% to +5% over the same span.
